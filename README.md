@@ -64,4 +64,4 @@ ng serve
 - CSS
 
 ## Author:
-Marko Micovski (ID)
+Prohor Muchev
