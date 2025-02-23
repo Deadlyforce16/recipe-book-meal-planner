@@ -1,0 +1,62 @@
+<div class="meal-planner">
+  <button mat-button (click)="generateShoppingList()" class="generate-button">Generate Shopping List</button>
+  <h2>Weekly Meal Planner: (Breakfast, Lunch and Dinner)</h2>
+  
+  <div class="calendar">
+    <div *ngFor="let day of daysOfWeek" class="day">
+      <h3 class="day-header">{{ day }}</h3>
+      
+            <div class="meal-slot" *ngFor="let meal of meals" 
+          cdkDropList 
+          [id]="day + '-' + meal"
+          [cdkDropListData]="mealPlan.meals[day]?.[meal] ? [mealPlan.meals[day][meal]] : []"
+          (cdkDropListDropped)="drop($event, day, meal)">
+          
+        <div *ngIf="mealPlan.meals?.[day]?.[meal]" 
+            class="recipe-card" 
+            cdkDrag
+            [cdkDragData]="mealPlan.meals[day][meal]">
+          <div class="recipe-image-container">
+            <img *ngIf="mealPlan.meals[day][meal].imageUrl" 
+                [src]="mealPlan.meals[day][meal].imageUrl" 
+                class="recipe-image"
+                alt="Recipe image">
+          </div>
+          <h4 class="recipe-title">{{ mealPlan.meals[day][meal].title }}</h4>
+          <button mat-icon-button 
+                  color="warn" 
+                  (click)="clearMealSlot(day, meal)"
+                  class="clear-button">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div *ngIf="!mealPlan.meals?.[day]?.[meal]" class="empty-slot">
+          <mat-icon>restaurant</mat-icon>
+          <p>Drag recipe here</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="available-recipes">Available Recipes:</h3>
+  <div cdkDropList 
+       id="recipe-list"
+       class="recipe-list"
+       [cdkDropListData]="recipes"
+       [cdkDropListConnectedTo]="getConnectedDropLists()">
+       
+    <div *ngFor="let recipe of recipes" 
+         class="recipe-card" 
+         cdkDrag
+         [cdkDragData]="recipe">
+      <div class="recipe-image-container">
+        <img *ngIf="recipe.imageUrl" 
+             [src]="recipe.imageUrl" 
+             class="recipe-image"
+             alt="Recipe image">
+      </div>
+      <h4 class="recipe-title">{{ recipe.title }}</h4>
+    </div>
+  </div>
+</div>

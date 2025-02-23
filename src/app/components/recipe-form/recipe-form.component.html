@@ -1,0 +1,71 @@
+<form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
+    <h3>Title:</h3>
+    <mat-form-field>
+      <input matInput placeholder="Title" formControlName="title" />
+    </mat-form-field>
+    <h3>Description:</h3>
+    <mat-form-field>
+      <textarea matInput placeholder="Description" formControlName="description"></textarea>
+    </mat-form-field>
+    <h3>Cooking Time:</h3>
+    <mat-form-field>
+        <input matInput 
+               type="number"
+               placeholder="Cooking Time (minutes)" 
+               formControlName="cookingTime"
+               (keydown)="validateNumberInput($event)"
+               min="0"
+               required>
+        <mat-error *ngIf="recipeForm.get('cookingTime')?.hasError('required')">
+          Cooking time is required
+        </mat-error>
+        <mat-error *ngIf="recipeForm.get('cookingTime')?.hasError('min')">
+          Cooking time cannot be negative
+        </mat-error>
+      </mat-form-field>
+    <h3>Difficulty:</h3>
+    <mat-form-field>
+      <mat-select placeholder="Difficulty" formControlName="difficulty">
+        <mat-option value="Easy">Easy</mat-option>
+        <mat-option value="Medium">Medium</mat-option>
+        <mat-option value="Hard">Hard</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <h3>Category:</h3>
+    <mat-form-field>
+      <mat-label>Category</mat-label>
+      <input matInput formControlName="category">
+    </mat-form-field>
+    <h3>Image URL:</h3>
+    <mat-form-field>
+      <input matInput placeholder="Image URL" formControlName="imageUrl" />
+    </mat-form-field>
+  
+    <h3>Ingredients:</h3>
+    <div formArrayName="ingredients">
+      <div *ngFor="let ingredient of ingredients.controls; let i = index" [formGroupName]="i">
+        <mat-form-field>
+          <input matInput placeholder="Ingredient Name" formControlName="name" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Quantity" formControlName="quantity" />
+        </mat-form-field>
+        <button mat-button type="button" (click)="removeIngredient(i)" class="edit-button">Remove</button>
+      </div>
+      <button mat-button type="button" (click)="addIngredient()" class="edit-button">Add Ingredient</button>
+    </div>
+  
+    <h3>Instructions:</h3>
+    <div formArrayName="instructions">
+      <div *ngFor="let instruction of instructions.controls; let i = index">
+        <mat-form-field>
+          <textarea matInput [formControlName]="i" placeholder="Step {{ i + 1 }}"></textarea>
+        </mat-form-field>
+        <button mat-button type="button" (click)="removeInstruction(i)" class="edit-button">Remove</button>
+      </div>
+      <button mat-button type="button" (click)="addInstruction()" class="edit-button">Add Instruction</button>
+    </div>
+  
+    <button mat-button type="submit" [disabled]="recipeForm.invalid" class="edit-button">Save</button>
+    <button mat-button type="button" routerLink="/recipes" class="edit-button">Cancel</button>
+  </form>

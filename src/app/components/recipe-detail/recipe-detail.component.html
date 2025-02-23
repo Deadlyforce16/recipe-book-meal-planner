@@ -1,0 +1,22 @@
+<mat-card *ngIf="recipe" class="recipe-detail">
+    <img mat-card-image [src]="recipe.imageUrl" alt="{{ recipe.title }}" />
+    <mat-card-content>
+      <h2>{{ recipe.title }}</h2>
+      <p>{{ recipe.description }}</p>
+      <p><strong>Cooking Time:</strong> {{ recipe.cookingTime }} minutes</p>
+      <p><strong>Difficulty:</strong> {{ recipe.difficulty }}</p>
+      <h3>Ingredients:</h3>
+      <ul>
+        <li *ngFor="let ingredient of recipe.ingredients">
+          {{ ingredient.name }} - {{ ingredient.quantity }}
+        </li>
+      </ul>
+      <h3>Instructions:</h3>
+      <ol>
+        <li *ngFor="let instruction of recipe.instructions">{{ instruction }}</li>
+      </ol>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button routerLink="/recipes">Back to List</button>
+    </mat-card-actions>
+  </mat-card>

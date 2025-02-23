@@ -1,0 +1,55 @@
+<div class="shopping-list-container">
+    <h2>Shopping List:</h2>
+    
+    <div class="bulk-actions" *ngIf="selectedItems.size > 0" class="bulk-actions">
+      <button mat-raised-button color="primary" (click)="markSelectedAsPurchased()">
+        <mat-icon>check_circle</mat-icon>
+        Mark Purchased ({{ selectedItems.size }})
+      </button>
+      <button mat-raised-button color="warn" (click)="deleteSelected()">
+        <mat-icon>delete</mat-icon>
+        Delete Selected ({{ selectedItems.size }})
+      </button>
+      <button mat-raised-button color="accent" (click)="transferPurchasedItems()">
+        <mat-icon>archive</mat-icon>
+        Transfer Purchased ({{ selectedItems.size }})
+      </button>
+    </div>
+  
+    <div *ngIf="shoppingList.length === 0" class="empty-state">
+      <mat-icon>shopping_cart</mat-icon>
+      <p>Your shopping list is empty</p>
+      <p>Generate a shopping list from your meal plan to get started</p>
+    </div>
+  
+    <mat-list *ngIf="shoppingList.length > 0">
+      <mat-list-item *ngFor="let item of shoppingList" 
+                    class="list-item"
+                    [class.selected]="selectedItems.has(item)">
+        <div class="content-container">
+          <div class="text-content" (click)="toggleSelection(item)">
+            <mat-icon class="selection-checkbox">
+              {{ selectedItems.has(item) ? 'check_box' : 'check_box_outline_blank' }}
+            </mat-icon>
+            <span class="item-name">{{ item.name }}</span>
+            <span class="item-quantity">{{ item.quantity }}</span>
+          </div>
+          
+          <div class="actions-container">
+            <button mat-icon-button 
+                    (click)="togglePurchased(item)"
+                    [color]="item.purchased ? 'primary' : ''">
+              <mat-icon>{{ item.purchased ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+            </button>
+            
+            <button mat-icon-button 
+                    color="warn" 
+                    (click)="deleteItem(item.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </div>

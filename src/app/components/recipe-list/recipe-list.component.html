@@ -1,0 +1,96 @@
+<div class="controls">
+  <div class="filter-controls">
+    <a mat-button routerLink="/recipes/add" class="add-button">
+      <mat-icon>add</mat-icon>Add Recipe
+    </a>
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput [(ngModel)]="searchTerm" placeholder="Search recipes...">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <mat-select [(value)]="selectedCategory">
+        <mat-option value="">All Categories</mat-option>
+        <mat-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Sort By</mat-label>
+      <mat-select [(value)]="sortBy">
+        <mat-option value="">Default</mat-option>
+        <mat-option value="time">Cooking Time</mat-option>
+        <mat-option value="difficulty">Difficulty</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="view-toggle">
+      <button mat-icon-button (click)="viewMode = 'grid'" [class.active]="viewMode === 'grid'">
+        <mat-icon>grid_view</mat-icon>
+      </button>
+      <button mat-icon-button (click)="viewMode = 'list'" [class.active]="viewMode === 'list'">
+        <mat-icon>list</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="recipe-container" [ngSwitch]="viewMode">
+  <div *ngSwitchCase="'grid'" class="grid-view">
+    <mat-card *ngFor="let recipe of recipes | filterRecipes:searchTerm:selectedCategory | sortRecipes:sortBy" class="recipe-card">
+      <button mat-icon-button class="favorite" (click)="toggleFavorite(recipe)">
+        <mat-icon>{{ recipe.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+      </button>
+      <img mat-card-image [src]="recipe.imageUrl" alt="{{ recipe.title }}">
+      <mat-card-content>
+        <h2>{{ recipe.title }}</h2>
+        <p class="category">{{ recipe.category }}</p>
+        <p>{{ recipe.description }}</p>
+        <div class="recipe-meta">
+          <span><mat-icon>schedule</mat-icon> {{ recipe.cookingTime }}m</span>
+          <span><mat-icon>whatshot</mat-icon> {{ recipe.difficulty }}</span>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button [routerLink]="['/recipes', recipe.id]">View</button>
+        <button mat-button [routerLink]="['/recipes/edit', recipe.id]">Edit</button>
+        <button mat-button (click)="deleteRecipe(+recipe.id!)">Delete</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div *ngSwitchCase="'list'" class="list-view">
+    <div *ngFor="let recipe of recipes | filterRecipes:searchTerm:selectedCategory | sortRecipes:sortBy" class="list-item">
+      <button mat-icon-button class="list-favorite" (click)="toggleFavorite(recipe)">
+        <mat-icon>{{ recipe.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+      </button>
+      
+      <img class="list-image" [src]="recipe.imageUrl" alt="{{ recipe.title }}">
+      <div class="list-details">
+        <h3>{{ recipe.title }}</h3>
+        <p class="category">{{ recipe.category }}</p>
+        <p>{{ recipe.description }}</p>
+        <div class="recipe-meta">
+          <span><mat-icon>schedule</mat-icon> {{ recipe.cookingTime }}m</span>
+          <span><mat-icon>whatshot</mat-icon> {{ recipe.difficulty }}</span>
+        </div>
+      </div>
+      <div class="list-actions">
+      <div class="list-actions">
+        <button mat-icon-button [routerLink]="['/recipes', recipe.id]">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <button mat-icon-button [routerLink]="['/recipes/edit', recipe.id]">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="deleteRecipe(+recipe.id!)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  
